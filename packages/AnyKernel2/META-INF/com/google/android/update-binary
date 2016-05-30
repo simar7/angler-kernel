@@ -36,10 +36,17 @@ fi;
 chmod -R 755 /tmp/anykernel/tools /tmp/anykernel/bin;
 bb=/tmp/anykernel/tools/busybox;
 
+sleep 1;
 ui_print "$(file_getprop /tmp/anykernel/anykernel.sh kernel.string)";
 ui_print " ";
-ui_print "AnyKernel2 by osm0sis @ xda-developers";
+ui_print " ++++++++++++++++++++++++++++++++++++ ";
+ui_print " ==================================== ";
+ui_print " | Flashing angler-kernel by simar7 | "
+ui_print " ==================================== "
+ui_print " ++++++++++++++++++++++++++++++++++++ ";
 ui_print " ";
+sleept 1;
+
 mount -o ro /system;
 mount /data;
 
@@ -57,6 +64,22 @@ if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.devicecheck)" == 1 ]; then
     abort "Unsupported device. Aborting...";
   fi;
 fi;
+
+ui_print "Injecting tweak scripts...";
+if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.system)" == 1 ]; then
+  ui_print " ";
+  if [ -d "$system/tweaks" ]; then
+    cp -rf /tmp/anykernel/system/tweaks/* /system/tweaks/;
+    set_perm_recursive 0 0 0755 0755 /system/tweaks;
+  else
+    mkdir /system/tweaks;
+    cp -rf /tmp/anykernel/system/tweaks/* /system/tweaks/;
+    set_perm_recursive 0 0 0755 0755 /system/tweaks;
+  fi;
+fi;
+
+ui_print "Cleaning up...";
+rm /system/etc/init.d
 
 if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.initd)" == 1 ]; then
   ui_print "Creating init.d...";
